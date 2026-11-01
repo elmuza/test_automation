@@ -12,3 +12,4 @@ def test_login_wrong_password():
     
 def test_login_wrong_username():
     assert login("guest", "password") is False
+    
