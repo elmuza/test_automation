@@ -13,7 +13,7 @@ def analyze_api_results(results):
         if result['status'] in SUCCESS_STATUSES:
             count_success_statuses += 1
         else:
-            count_failed_statuses +=1
+            count_failed_statuses += 1
     return {
             "passed": count_success_statuses,
             "failed": count_failed_statuses,
@@ -22,3 +22,4 @@ def analyze_api_results(results):
 
 if __name__ == "__main__":
     print(analyze_api_results([]))
+    
