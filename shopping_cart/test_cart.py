@@ -50,4 +50,18 @@ def test_zero_quantity(cart):
         cart.add_item('mouse', 500, 0)
     
     assert len(cart.items) == 0
-    
+
+
+@pytest.mark.parametrize('quantity', [-10, -1, 0])
+def test_invalid_quantity(cart, quantity):
+    with pytest.raises(ValueError):
+        cart.add_item("mouse", 500, quantity)
+
+    assert len(cart.items) == 0
+
+
+@pytest.mark.parametrize('quantity', [1, 2, 10])
+def test_valid_quantity(cart, quantity):
+    cart.add_item('mouse', 500, quantity)
+    assert cart.get_item_count() == quantity
+    assert cart.get_total() == 500 * quantity
