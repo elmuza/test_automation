@@ -1,9 +1,13 @@
 from cart import ShoppingCart
+
+
 import pytest
+
 
 @pytest.fixture(scope="function")
 def cart():
     return ShoppingCart()
+
 
 def test_empty_cart(cart):
     assert cart.get_item_count() == 0
