@@ -1,12 +1,4 @@
-from cart import ShoppingCart
-
-
 import pytest
-
-
-@pytest.fixture(scope="function")
-def cart():
-    return ShoppingCart()
 
 
 def test_empty_cart(cart):
