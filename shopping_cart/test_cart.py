@@ -1,12 +1,15 @@
 import pytest
 
 
+@pytest.mark.smoke
 def test_empty_cart(cart):
     assert cart.get_item_count() == 0
     assert cart.get_total() == 0
     assert cart.items == []
     
 
+@pytest.mark.smoke
+@pytest.mark.regression
 def test_add_items(cart):
     cart.add_item('mouse', 500, 2)
     cart.add_item('keyboard', 1500)
@@ -38,6 +41,7 @@ def test_clear_cart(cart):
     assert cart.get_total() == 0
 
 
+@pytest.mark.regression
 def test_negative_price(cart):
     with pytest.raises(ValueError):
         cart.add_item('mouse', -500)
