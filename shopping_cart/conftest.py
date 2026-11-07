@@ -29,4 +29,22 @@ def configured_cart(request):
     quantity = data["quantity"]
     cart.add_item(name, price, quantity)
     return cart
+
+
+@pytest.fixture
+def cart_with_cleanup():
+    print('SETUP: creating cart')
+    cart = ShoppingCart()
+    yield cart
+    cart.clear()
+    print('TEARDOWN: cart cleared')
     
+@pytest.fixture
+def prepared_cart_with_cleanup():
+    cart = ShoppingCart()
+    cart.add_item('keyboard', 2000, 2)
+    print('SETUP: prepared cart')
+    yield cart
+    cart.clear()
+    print('TEARDOWN: prepared cart cleared')
+
