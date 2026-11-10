@@ -1,0 +1,26 @@
+[
+  {
+    "name": "mouse",
+    "price": 500,
+    "quantity": 2,
+    "expected_total": 1000
+  },
+  {
+    "name": "keyboard",
+    "price": 1500,
+    "quantity": 3,
+    "expected_total": 4500
+  },
+  {
+    "name": "monitor",
+    "price": 8000,
+    "quantity": 2,
+    "expected_total": 16000
+  },
+  {
+    "name": "headphones",
+    "price": 1200,
+    "quantity": 4,
+    "expected_total": 4800
+  }
+]

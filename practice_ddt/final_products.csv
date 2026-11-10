@@ -1,0 +1,5 @@
+name,price,quantity,expected_total
+mouse,500,2,1000
+keyboard,1500,3,4500
+monitor,8000,2,16000
+headphones,1200,4,4800
