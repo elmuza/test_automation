@@ -7,4 +7,4 @@ def test_subtraction():
 
 
 def test_multiplication():
-    assert 4 * 3 == 15
+    assert 4 * 3 == 12

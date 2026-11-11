@@ -1,4 +1,4 @@
-def test_account_fixture(account):
+def test_bank_account_fixture(account):
     assert account.owner == 'Anna'
     assert account.balance == 1000
 
