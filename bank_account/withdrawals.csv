@@ -1,0 +1,5 @@
+owner,initial_balance,withdraw,expected_balance
+Anna,1000,300,700
+Bob,2000,500,1500
+Charlie,500,500,0
+Diana,10000,2500,7500

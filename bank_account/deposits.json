@@ -1,0 +1,26 @@
+[
+  {
+    "owner": "Anna",
+    "initial_balance": 1000,
+    "deposit": 500,
+    "expected_balance": 1500
+  },
+  {
+    "owner": "Bob",
+    "initial_balance": 2000,
+    "deposit": 750,
+    "expected_balance": 2750
+  },
+  {
+    "owner": "Charlie",
+    "initial_balance": 0,
+    "deposit": 100,
+    "expected_balance": 100
+  },
+  {
+    "owner": "Diana",
+    "initial_balance": 5000,
+    "deposit": 2500,
+    "expected_balance": 7500
+  }
+]
