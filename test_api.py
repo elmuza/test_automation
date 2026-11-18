@@ -1,13 +1,11 @@
-def check_status(status_code: int) -> bool:
-    return status_code == 200
+import requests
 
 
-assert check_status(200) is True
-assert check_status(404) is False
-
-def check_server_error(status_code: int) -> bool:
-    return status_code == 500
-
-
-assert check_server_error(500) is True
-assert check_server_error(200) is False
+def test_get_users():
+    response = requests.get('https://jsonplaceholder.typicode.com/users/3', timeout=10)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == 3
+    assert data["username"] == "Samantha"
+    
+       
