@@ -20,7 +20,7 @@ product_schema = {
                "type": "integer"
             },
             "in_stock": {
-                "type":"boolean"
+                "type": "boolean"
             }
         },
         "required": ["name", "price"]
