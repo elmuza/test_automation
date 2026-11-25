@@ -83,3 +83,42 @@ product_schema = {
 validate(instance=product, schema=product_schema)
 
 print("Validation passed")
+
+products = [
+    {
+        "id": 10,
+        "name": "Monitor",
+        "price": 15000,
+        "in_stock": True,
+        "manufacturer": {
+            "id": 5,
+            "name": "Samsung",
+            "country": "South Korea",
+        },
+        "tags": ["electronics", "monitor"],
+    },
+    {
+        "id": 11,
+        "name": "Keyboard",
+        "price": 3500,
+        "in_stock": False,
+        "manufacturer": {
+            "id": 6,
+            "name": "Logitech",
+            "country": "Switzerland",
+        },
+        "tags": ["electronics", "gaming"],
+    },
+]
+
+products_schema = {
+    "type": "array",
+    "minItems": 0,
+    "maxItems": 100,
+    "uniqueItems": True,
+    "items": product_schema
+}
+
+validate(instance=products, schema=products_schema)
+
+print("Validation passed")
