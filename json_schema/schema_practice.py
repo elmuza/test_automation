@@ -6,7 +6,7 @@ product = {
     "price": 15000,
     "in_stock": True,
     "manufacturer": {
-         "id": 5,
+        "id": 5,
         "name": "Samsung",
         "country": "South Korea",
     },
@@ -37,23 +37,34 @@ product_schema = {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "exclusiveMinimum": 0,},
+                    "exclusiveMinimum": 0,
+                },
                 "name": {
                     "type": "string",
-                    "minimum": 2,
-                    "maximum": 100,
+                    "minLength": 2,
+                    "maxLength": 100,
                 },
                 "country": {
-                  "type": "string",
-                  "minimum": 2,
-                  "maximum": 50,  
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 50,
                 },
             },
             "required": ["id", "name", "country"],
             "additionalProperties": False,
-        }
+        },
+        "description": {
+            "type": "string",
+            "maxLength": 200,
+        },
     },
-    "required": ["id", "name", "price", "in_stock", "manufacturer"], 
+    "required": [
+        "id",
+        "name",
+        "price",
+        "in_stock",
+        "manufacturer",
+    ],
     "additionalProperties": False,
 }
 
