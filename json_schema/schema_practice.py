@@ -1,10 +1,15 @@
 from jsonschema import validate
 
 product = {
-    "id": 1,
-    "name": "monitor",
-    "price": 1501,
-    "in_stock": False,
+    "id": 10,
+    "name": "Monitor",
+    "price": 15000,
+    "in_stock": True,
+    "manufacturer": {
+         "id": 5,
+        "name": "Samsung",
+        "country": "South Korea",
+    },
 }
 
 product_schema = {
@@ -27,8 +32,29 @@ product_schema = {
         "in_stock": {
             "type": "boolean",
         },
+        "manufacturer": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,},
+                "name": {
+                    "type": "string",
+                    "minimum": 2,
+                    "maximum": 100,
+                },
+                "country": {
+                  "type": "string",
+                  "minimum": 2,
+                  "maximum": 50,  
+                },
+            },
+            "required": ["id", "name", "country"],
+            "additionalProperties": False,
+        }
     },
-    "required": ["id", "name", "price", "in_stock"],
+    "required": ["id", "name", "price", "in_stock", "manufacturer"], 
+    "additionalProperties": False,
 }
 
 validate(instance=product, schema=product_schema)
