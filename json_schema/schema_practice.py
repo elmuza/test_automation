@@ -10,6 +10,7 @@ product = {
         "name": "Samsung",
         "country": "South Korea",
     },
+    "tags": ["electronics", "gaming", "monitor"],
 }
 
 product_schema = {
@@ -57,6 +58,17 @@ product_schema = {
             "type": "string",
             "maxLength": 200,
         },
+        "tags": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 5,
+                "uniqueItems": True,
+                "items": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 30,
+                    }
+        },
     },
     "required": [
         "id",
@@ -64,10 +76,10 @@ product_schema = {
         "price",
         "in_stock",
         "manufacturer",
+        "tags",
     ],
     "additionalProperties": False,
 }
-
 validate(instance=product, schema=product_schema)
 
 print("Validation passed")
