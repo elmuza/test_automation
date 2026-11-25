@@ -1,10 +1,10 @@
 from jsonschema import validate
 
 product = {
-    "id": 10,
-    "name": "Monitor",
-    "price": 15000,
-    "in_stock": True,
+    "id": 1,
+    "name": "monitor",
+    "price": 1501,
+    "in_stock": False,
 }
 
 product_schema = {
@@ -12,12 +12,17 @@ product_schema = {
     "properties": {
         "id": {
             "type": "integer",
+            "exclusiveMinimum": 0,
         },
         "name": {
             "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
         },
         "price": {
             "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000,
         },
         "in_stock": {
             "type": "boolean",
