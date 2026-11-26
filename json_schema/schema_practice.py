@@ -1,5 +1,7 @@
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError, SchemaError
+import json
+from pathlib import Path
 
 product = {
     "id": 10,
@@ -14,73 +16,12 @@ product = {
     "tags": ["electronics", "gaming", "monitor"],
 }
 
-product_schema = {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "integer",
-            "exclusiveMinimum": 0,
-        },
-        "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 50,
-        },
-        "price": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 1000000,
-        },
-        "in_stock": {
-            "type": "boolean",
-        },
-        "manufacturer": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "exclusiveMinimum": 0,
-                },
-                "name": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 100,
-                },
-                "country": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 50,
-                },
-            },
-            "required": ["id", "name", "country"],
-            "additionalProperties": False,
-        },
-        "description": {
-            "type": "string",
-            "maxLength": 200,
-        },
-        "tags": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 5,
-            "uniqueItems": True,
-            "items": {
-                "type": "string",
-                "minLength": 2,
-                "maxLength": 30,
-            },
-        },
-    },
-    "required": [
-        "id",
-        "name",
-        "price",
-        "in_stock",
-        "manufacturer",
-        "tags",
-    ],
-    "additionalProperties": False,
-}
+BASE_DIR = Path(__file__).resolve().parent
+
+schema_path = BASE_DIR / "schemas" / "product.json"
+
+with schema_path.open(encoding="utf-8") as file:
+    product_schema = json.load(file)
 
 # validate(instance=product, schema=product_schema)
 
@@ -144,12 +85,14 @@ def validate_data(data, schema):
         return True
     
 validate_data(products, products_schema)
+validate_data(product, product_schema)
 
-#  Атрибут	Что содержит
-# error.message	Текст ошибки
-# error.path	Путь до некорректных данных
-# error.schema_path	Путь до нарушенного правила схемы
-# error.validator	Название нарушенного правила
-# error.validator_value	Значение правила
-# error.instance	Некорректное значение
-# error.schema	Фрагмент схемы, вызвавший ошибку
+
+
+# schemas_dir = Path(__file__).parent / "schemas"
+
+# schema_path = schemas_dir / "product.json"
+# schema_path.write_text(
+#     json.dumps(product_schema, ensure_ascii=False, indent=4) + "\n",
+#     encoding="utf-8",
+# )
