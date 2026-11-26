@@ -120,7 +120,7 @@ def test_create_product():
 
         # Keep the ID checks before validation so the finally block can clean up.
         assert isinstance(data, dict)
-        assert isinstance(data['id'], int)
+        assert type(data['id']) is int
         assert data['id'] > 0
         product_id = data['id']
 
@@ -179,15 +179,16 @@ def test_delete_product():
 
         # Keep the ID checks before validation so the finally block can clean up.
         assert isinstance(data, dict)
-        assert isinstance(data['id'], int)
+        assert type(data['id']) is int
         assert data['id'] > 0
         product_id = data['id']
+        product_url = f"{BASE_URL}/products/{product_id}"
         validate(data, product_schema)
-
-        product_url = f'{BASE_URL}/products/{data['id']}'
         
         response_get = requests.get(product_url, timeout=10)
         assert response_get.status_code == 200
+        data_get = response_get.json()
+        validate(data_get, product_schema)
         
         response_del = requests.delete(product_url, timeout=10)
         assert response_del.status_code == 200
