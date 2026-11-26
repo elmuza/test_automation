@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "detail": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "loc": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": ["string", "integer"]
+            }
+          },
+          "msg": {
+            "type": "string"
+          },
+          "input": {},
+          "ctx": {
+            "type": "object"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "loc", "msg", "input"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["detail"],
+  "additionalProperties": false
+}

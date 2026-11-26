@@ -20,6 +20,7 @@ def load_schema(filename):
 product_schema = load_schema("product.json")
 message_schema = load_schema("message.json")
 error_schema = load_schema("error.json")
+validation_error_schema = load_schema("validation_error.json")
 
 
 def assert_product_not_found(response):
@@ -154,10 +155,8 @@ def test_create_product_without_price():
     response = requests.post(url, json=payload, timeout=10)
     assert response.status_code == 422
     data = response.json()
-    assert isinstance(data, dict)
-    assert isinstance(data['detail'], list)
+    validate(data, validation_error_schema)
     assert len(data['detail']) == 1
-    assert isinstance(data['detail'][0], dict)
     error =  data['detail'][0]
     assert error['type'] == 'missing'
     assert error['loc'] == ["body", "price"]
