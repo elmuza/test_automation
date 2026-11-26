@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "minItems": 0,
+  "maxItems": 100,
+  "uniqueItems": true,
+  "items": {
+    "$ref": "https://example.com/schemas/product.json"
+  }
+}

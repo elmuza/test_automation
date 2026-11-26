@@ -3,22 +3,26 @@ from pathlib import Path
 
 from jsonschema import validate
 from jsonschema.exceptions import SchemaError, ValidationError
+from referencing import Registry, Resource
 
 
 BASE_DIR = Path(__file__).resolve().parent
 
 
-def load_schema(filename):
-    schema_path = BASE_DIR / "schemas" / filename
+def load_schema(path):
+    schema_path = BASE_DIR / path
     with schema_path.open(encoding="utf-8") as file:
         schema = json.load(file)
 
     return schema
 
 
-def validate_data(data, schema):
+def validate_data(data, schema, registry=None):
     try:
-        validate(data, schema)
+        if registry is None:
+            validate(data, schema)
+        else:
+            validate(data, schema, registry=registry)
     except ValidationError as error:
         print("Message:", error.message)
         print("Path", list(error.path))
@@ -75,13 +79,14 @@ products = [
     },
 ]
 
-products_schema = {
-    "type": "array",
-    "minItems": 0,
-    "maxItems": 100,
-    "uniqueItems": True,
-    "items": load_schema("product.json"),
-}
+product_schema = load_schema(Path("schemas") / "product.json")
+products_schema = load_schema(Path("products.json"))
+order_schema = load_schema(Path("schemas") / "order.json")
+
+product_registry = Registry().with_resource(
+    product_schema["$id"],
+    Resource.from_contents(product_schema),
+)
 
 
 order = {
@@ -99,7 +104,7 @@ order = {
 }
 
 
-validate_data(order, load_schema("order.json"))
-validate_data(products, products_schema)
-validate_data(product, load_schema("product.json"))
+validate_data(order, order_schema)
+validate_data(products, products_schema, product_registry)
+validate_data(product, product_schema)
 
