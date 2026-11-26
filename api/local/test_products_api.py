@@ -1,7 +1,23 @@
+from jsonschema import validate
 import requests
 import pytest
+import json
+from pathlib import Path
+from jsonschema.exceptions import SchemaError, ValidationError
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+SCHEMAS_DIR = BASE_DIR / "api" / "schemas"
 
 BASE_URL = "http://127.0.0.1:8000"
+
+def load_schema(filename):
+    schema_path = SCHEMAS_DIR / filename
+    with schema_path.open(encoding="utf-8") as file:
+        schema = json.load(file)
+
+    return schema
+
+product_schema = load_schema("product.json")
 
 
 @pytest.fixture
@@ -45,12 +61,12 @@ def test_get_created_product(created_product):
     assert response.status_code == 200
 
     data = response.json()
-    assert isinstance(data, dict)
+    validate(data, product_schema)
 
     assert data['id'] == created_product['id']
     assert data['name'] == created_product['name']
     assert data['price'] == created_product['price']
-    
+
 def test_update_product(created_product):
     url = f"{BASE_URL}/products/{created_product['id']}"
     payload = {
