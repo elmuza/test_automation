@@ -1,10 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/products.json",
   "type": "array",
   "minItems": 0,
   "maxItems": 100,
   "uniqueItems": true,
   "items": {
-    "$ref": "https://example.com/schemas/product.json"
+    "$ref": "product.json"
   }
 }

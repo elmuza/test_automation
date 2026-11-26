@@ -1,16 +1,17 @@
 import json
 from pathlib import Path
 
-from jsonschema import validate
+from jsonschema import Draft202012Validator, validate
 from jsonschema.exceptions import SchemaError, ValidationError
 from referencing import Registry, Resource
 
 
 BASE_DIR = Path(__file__).resolve().parent
+SCHEMAS_DIR = BASE_DIR / "schemas"
 
 
-def load_schema(path):
-    schema_path = BASE_DIR / path
+def load_schema(filename):
+    schema_path = SCHEMAS_DIR / filename
     with schema_path.open(encoding="utf-8") as file:
         schema = json.load(file)
 
@@ -79,9 +80,12 @@ products = [
     },
 ]
 
-product_schema = load_schema(Path("schemas") / "product.json")
-products_schema = load_schema(Path("products.json"))
-order_schema = load_schema(Path("schemas") / "order.json")
+product_schema = load_schema("product.json")
+products_schema = load_schema("products.json")
+order_schema = load_schema("order.json")
+
+Draft202012Validator.check_schema(product_schema)
+Draft202012Validator.check_schema(products_schema)
 
 product_registry = Registry().with_resource(
     product_schema["$id"],
