@@ -1,9 +1,9 @@
-from jsonschema import validate
-import requests
-import pytest
 import json
 from pathlib import Path
-from jsonschema.exceptions import SchemaError, ValidationError
+
+import pytest
+import requests
+from jsonschema import validate
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 SCHEMAS_DIR = BASE_DIR / "api" / "schemas"
@@ -18,6 +18,7 @@ def load_schema(filename):
     return schema
 
 product_schema = load_schema("product.json")
+message_schema = load_schema("message.json")
 
 
 @pytest.fixture
@@ -76,21 +77,19 @@ def test_update_product(created_product):
     response = requests.put(url, json=payload, timeout=10)
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, dict)
+    validate(data, product_schema)
     assert data['name'] == payload['name']
     assert data['price'] == payload['price']
     assert data['id'] == created_product['id']
-    assert isinstance(data['id'], int)
-    assert isinstance(data['name'], str)
-    assert isinstance(data['price'], int)
+
     response_get = requests.get(url, timeout=10)
     assert response_get.status_code == 200
     data_get = response_get.json()
-    assert isinstance(data_get, dict)
+    validate(data_get, product_schema)
     assert data_get['name'] == payload['name']
     assert data_get['price'] == payload['price']
     assert data_get['id'] == created_product['id']
-    
+
 def test_update_nonexistent_product():
     product_id = 999999
     url = f"{BASE_URL}/products/{product_id}"
@@ -118,27 +117,24 @@ def test_create_product():
         response = requests.post(url, json=payload, timeout=10)
         assert response.status_code == 201
         data = response.json()
-        
+
+        # Keep the ID checks before validation so the finally block can clean up.
         assert isinstance(data, dict)
         assert isinstance(data['id'], int)
         assert data['id'] > 0
         product_id = data['id']
-        
-        assert isinstance(data['name'], str)
-        assert isinstance(data['price'], int)
+
+        validate(data, product_schema)
         assert data['name'] == payload['name']
         assert data['price'] == payload['price']
-        
+
         response_get= requests.get(f'{url}/{product_id}', timeout=10)
         assert response_get.status_code == 200
         data_get = response_get.json()
-        assert isinstance(data_get, dict)
+        validate(data_get, product_schema)
         assert data_get['name'] == payload['name']
         assert data_get['price'] == payload['price']
         assert data_get['id'] == product_id
-        assert type(data_get["id"]) is int
-        assert isinstance(data_get["name"], str)
-        assert type(data_get["price"]) is int
 
     finally:
         if product_id is not None:
@@ -180,10 +176,14 @@ def test_delete_product():
         response_post = requests.post(url, json=payload, timeout=10)
         assert response_post.status_code == 201
         data = response_post.json()
+
+        # Keep the ID checks before validation so the finally block can clean up.
         assert isinstance(data, dict)
         assert isinstance(data['id'], int)
         assert data['id'] > 0
         product_id = data['id']
+        validate(data, product_schema)
+
         product_url = f'{BASE_URL}/products/{data['id']}'
         
         response_get = requests.get(product_url, timeout=10)
@@ -192,8 +192,7 @@ def test_delete_product():
         response_del = requests.delete(product_url, timeout=10)
         assert response_del.status_code == 200
         data_del = response_del.json()
-        assert isinstance(data_del, dict)
-        assert isinstance(data_del['message'], str)
+        validate(data_del, message_schema)
         assert data_del['message'] == "Product deleted"
         
         response_get = requests.get(product_url,
@@ -211,8 +210,7 @@ def test_delete_product():
                 response_delite = requests.delete(product_url, timeout=10)
                 assert response_delite.status_code == 200
                 data_delite = response_delite.json()
-                assert isinstance(data_delite, dict)
-                assert isinstance(data_delite['message'], str)
+                validate(data_delite, message_schema)
                 assert data_delite['message'] == "Product deleted"
                 
                 response_get = requests.get(product_url,
