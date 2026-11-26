@@ -1,7 +1,39 @@
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError, SchemaError
 import json
 from pathlib import Path
+
+from jsonschema import validate
+from jsonschema.exceptions import SchemaError, ValidationError
+
+
+BASE_DIR = Path(__file__).resolve().parent
+
+
+def load_schema(filename):
+    schema_path = BASE_DIR / "schemas" / filename
+    with schema_path.open(encoding="utf-8") as file:
+        schema = json.load(file)
+
+    return schema
+
+
+def validate_data(data, schema):
+    try:
+        validate(data, schema)
+    except ValidationError as error:
+        print("Message:", error.message)
+        print("Path", list(error.path))
+        print("Schema path", list(error.schema_path))
+        print("Rule:", error.validator)
+        print("Expected:", error.validator_value)
+        print("Actual:", error.instance)
+        return False
+    except SchemaError:
+        print("Invalid schema")
+        return False
+    else:
+        print("Validation passed")
+        return True
+
 
 product = {
     "id": 10,
@@ -15,13 +47,6 @@ product = {
     },
     "tags": ["electronics", "gaming", "monitor"],
 }
-
-BASE_DIR = Path(__file__).resolve().parent
-
-schema_path = BASE_DIR / "schemas" / "product.json"
-
-with schema_path.open(encoding="utf-8") as file:
-    product_schema = json.load(file)
 
 products = [
     {
@@ -55,37 +80,9 @@ products_schema = {
     "minItems": 0,
     "maxItems": 100,
     "uniqueItems": True,
-    "items": product_schema,
+    "items": load_schema("product.json"),
 }
 
-def validate_data(data, schema):
-    try:
-        validate(data, schema)
-    except ValidationError as error:
-        print("Message:", error.message)
-        print("Path", list(error.path))
-        print("Schema path", list(error.schema_path))
-        print("Rule:", error.validator)
-        print("Expected:", error.validator_value)
-        print("Actual:", error.instance)
-        return False
-    except SchemaError:
-        print("Invalid schema")
-        return False
-    else:
-        print("Validation passed")
-        return True
-    
-validate_data(products, products_schema)
-validate_data(product, product_schema)
-
-
-BASE_DIR = Path(__file__).resolve().parent
-
-schema_path = BASE_DIR / "schemas" / "order.json"
-
-with schema_path.open(encoding="utf-8") as file:
-    order_schema = json.load(file)
 
 order = {
     "id": 100,
@@ -101,4 +98,8 @@ order = {
     },
 }
 
-validate_data(order, order_schema)
+
+validate_data(order, load_schema("order.json"))
+validate_data(products, products_schema)
+validate_data(product, load_schema("product.json"))
+
