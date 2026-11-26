@@ -30,7 +30,7 @@
           }
         },
         "required": ["type", "loc", "msg", "input"],
-        "additionalProperties": false
+        "additionalProperties": true
       }
     }
   },
