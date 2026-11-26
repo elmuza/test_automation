@@ -23,10 +23,6 @@ schema_path = BASE_DIR / "schemas" / "product.json"
 with schema_path.open(encoding="utf-8") as file:
     product_schema = json.load(file)
 
-# validate(instance=product, schema=product_schema)
-
-# print("Product validation passed")
-
 products = [
     {
         "id": 10,
@@ -62,10 +58,6 @@ products_schema = {
     "items": product_schema,
 }
 
-# validate(instance=products, schema=products_schema)
-
-# print("Products validation passed")
-
 def validate_data(data, schema):
     try:
         validate(data, schema)
@@ -88,11 +80,25 @@ validate_data(products, products_schema)
 validate_data(product, product_schema)
 
 
+BASE_DIR = Path(__file__).resolve().parent
 
-# schemas_dir = Path(__file__).parent / "schemas"
+schema_path = BASE_DIR / "schemas" / "order.json"
 
-# schema_path = schemas_dir / "product.json"
-# schema_path.write_text(
-#     json.dumps(product_schema, ensure_ascii=False, indent=4) + "\n",
-#     encoding="utf-8",
-# )
+with schema_path.open(encoding="utf-8") as file:
+    order_schema = json.load(file)
+
+order = {
+    "id": 100,
+    "delivery_address": {
+        "city": "Bender",
+        "street": "Lenina 10",
+        "postal_code": "3200",
+    },
+    "billing_address": {
+        "city": "Tiraspol",
+        "street": "Mira 15",
+        "postal_code": "3300",
+    },
+}
+
+validate_data(order, order_schema)
