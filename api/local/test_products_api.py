@@ -19,6 +19,14 @@ def load_schema(filename):
 
 product_schema = load_schema("product.json")
 message_schema = load_schema("message.json")
+error_schema = load_schema("error.json")
+
+
+def assert_product_not_found(response):
+    assert response.status_code == 404
+    error_data = response.json()
+    validate(error_data, error_schema)
+    assert error_data["detail"] == "Product not found"
 
 
 @pytest.fixture
@@ -48,10 +56,7 @@ def created_product():
     assert response.status_code == 200
     response_get = requests.get(f"{BASE_URL}/products/{data['id']}",
             timeout=10)
-    assert response_get.status_code == 404
-    data_get = response_get.json()
-    assert isinstance(data_get, dict)
-    assert "Product not found" in data_get['detail']
+    assert_product_not_found(response_get)
 
 
 def test_get_created_product(created_product):
@@ -99,12 +104,9 @@ def test_update_nonexistent_product():
     }
         
     response = requests.put(url, json=payload, timeout=10)
-    assert response.status_code == 404
-    data = response.json()
-    assert isinstance(data, dict)
-    assert "Product not found" in data['detail']
+    assert_product_not_found(response)
     response_get = requests.get(url, timeout=10)
-    assert response_get.status_code == 404  
+    assert_product_not_found(response_get)
     
 def test_create_product():
     payload = {
@@ -142,10 +144,7 @@ def test_create_product():
             assert response_del.status_code == 200
             response_get = requests.get(f"{BASE_URL}/products/{data['id']}",
                     timeout=10)
-            assert response_get.status_code == 404
-            data_get = response_get.json()
-            assert isinstance(data_get, dict)
-            assert "Product not found" in data_get['detail']
+            assert_product_not_found(response_get)
             
 def test_create_product_without_price():
     payload = {
@@ -198,10 +197,7 @@ def test_delete_product():
         
         response_get = requests.get(product_url,
                 timeout=10)
-        assert response_get.status_code == 404
-        data_get = response_get.json()
-        assert isinstance(data_get, dict)
-        assert "Product not found" in data_get['detail']
+        assert_product_not_found(response_get)
 
     finally:
         if product_id is not None:
@@ -216,10 +212,9 @@ def test_delete_product():
                 
                 response_get = requests.get(product_url,
                         timeout=10)
-                assert response_get.status_code == 404
-                data_get = response_get.json()
-                assert isinstance(data_get, dict)
-                assert data_get['detail'] == "Product not found"
+                assert_product_not_found(response_get)
+            else:
+                assert_product_not_found(final_response)
                
 def test_get_nonexistent_product():
     payload = {
@@ -249,10 +244,7 @@ def test_get_nonexistent_product():
         assert data_del['message'] == "Product deleted"
         
         response_get = requests.get(product_url, timeout=10)
-        assert response_get.status_code == 404
-        data_get = response_get.json()
-        assert isinstance(data_get, dict)
-        assert data_get['detail'] == "Product not found"
+        assert_product_not_found(response_get)
     
     finally:
             if product_id is not None:
@@ -268,10 +260,9 @@ def test_get_nonexistent_product():
                     
                     response_get = requests.get(product_url,
                             timeout=10)
-                    assert response_get.status_code == 404
-                    data_get = response_get.json()
-                    assert isinstance(data_get, dict)
-                    assert data_get['detail'] == "Product not found"
+                    assert_product_not_found(response_get)
+                else:
+                    assert_product_not_found(final_response)
     
 def test_delete_nonexistent_product():
     payload = {
@@ -299,22 +290,13 @@ def test_delete_nonexistent_product():
         assert data_del['message'] == "Product deleted"
         
         response_get = requests.get(product_url, timeout=10)
-        assert response_get.status_code == 404
-        data_get = response_get.json()
-        assert isinstance(data_get, dict)
-        assert data_get['detail'] == "Product not found"
+        assert_product_not_found(response_get)
 
         response_del_nonexistent = requests.delete(product_url, timeout=10)
-        assert response_del_nonexistent.status_code == 404
-        data_del_nonexistent = response_del_nonexistent.json()
-        assert isinstance(data_del_nonexistent, dict)
-        assert data_del_nonexistent['detail'] == "Product not found"
+        assert_product_not_found(response_del_nonexistent)
         
         response_get_after_del = requests.get(product_url, timeout=10)
-        assert response_get_after_del.status_code == 404
-        data_get_after_del = response_get_after_del.json()  
-        assert isinstance(data_get_after_del, dict)
-        assert data_get_after_del['detail'] == "Product not found"
+        assert_product_not_found(response_get_after_del)
     
     finally:
         if product_id is not None:
@@ -330,10 +312,9 @@ def test_delete_nonexistent_product():
                 
                 response_get = requests.get(product_url,
                         timeout=10)
-                assert response_get.status_code == 404
-                data_get = response_get.json()
-                assert isinstance(data_get, dict)
-                assert data_get['detail'] == "Product not found"
+                assert_product_not_found(response_get)
+            else:
+                assert_product_not_found(final_response)
              
         
     
